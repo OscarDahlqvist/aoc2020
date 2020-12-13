@@ -1,14 +1,5 @@
 import re
 import json
-from math import prod
-from sympy import symbols
-from sympy import solve
-from sympy import diophantine
-from sympy import solveset,N
-from sympy.solvers.diophantine import *
-from sympy.solvers.diophantine.diophantine import *
-from sympy.solvers.diophantine.diophantine import diop_solve
-from sympy import sympify
 
 f = open("input.txt","r").read()
 
@@ -66,9 +57,6 @@ while True:
     i += worksSize
 
     get = lines[nCorrect]
-
-    #if sn+o = i+indexof(i)
-    #sn = i+indexof(i)-o
 
     if get == "x":
         nCorrect+=1
