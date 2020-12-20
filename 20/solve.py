@@ -98,10 +98,6 @@ for (b1,b2) in itertools.permutations(brickNames, r=2):
 
 allAxis = list(conditions.keys())
 
-#for (srcTile, srcAxis), arr in conditions.items():
-#    ""
-#    print((srcTile, srcAxis, arr))
-
 def cpy(x):
     return copy.deepcopy(x)
 
@@ -146,8 +142,6 @@ def mx(grid, remaning, index):
         newGrid = cpy(grid)
         newGrid[y][x] = nextBrick
 
-        #print(insert, nextBrick)
-
         mx(newGrid, newRemaning, index+1)
 
 orgGrid = [[0 for x in range(outputSize)] for x in range(outputSize)]
@@ -169,15 +163,13 @@ else:
     exit()
 
 print("Grid found")
-for x in hackyBadRetVal:
-    print(x)
-    X = outputSize-1
 
+X = outputSize-1
 (a,_) = hackyBadRetVal[0][0]
 (b,_) = hackyBadRetVal[0][X]
 (c,_) = hackyBadRetVal[X][0]
 (d,_) = hackyBadRetVal[X][X]
-print(f"part 2: {a*b*c*d}")
+print(f"part 1: {a*b*c*d}")
 
 # Part 2
 
@@ -195,7 +187,7 @@ for y,row in enumerate(hackyBadRetVal):
             for x2, char in enumerate(row):
                 imageGrid[y2+(brickH-2)*y][x2+(brickH-2)*x] = char
 
-#this does absolutely nothing important, just for verifying with example
+#this does absolutely nothing important, just for verifying the example
 imageGrid = np.flipud(imageGrid)
 imageGrid = np.fliplr(imageGrid)
 imageGrid = np.rot90(imageGrid)
