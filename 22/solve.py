@@ -45,75 +45,73 @@ print(f"part1: {ret}")"""
 
 ply1 = copy.deepcopy(srcPly1)
 ply2 = copy.deepcopy(srcPly2)
-winner = []
 
 iter = 0
 
-def combat(p1,p2, setups, depth = 0):
-    while True:
+def combat(p1,p2,depth=0):
+    deckHistory = {}
+    winner = 0
+
+    while len(p2) > 0 and len(p1) > 0:
+        
         global iter
         iter+=1
-        if iter % 10000 == 0:
+        if iter % 1000000 == 0:
             print(iter)
 
-
-        if len(p2) == 0:
-            #print(f"{exS}p2 out of cards")
-            return (1,p1)
-        if len(p1) == 0:
-            #print(f"{exS}p1 out of cards")
-            return (2,p2)
+        exS = " "*depth
 
         c1 = p1.pop(0)
         c2 = p2.pop(0)
-        
-        exS = " "*depth
 
-        # infinite handling
-        p1str = str(p1)
-        p2str = str(p2)
-        if p1str in setups or p2str in setups:
-            #print(f"{exS}Infinite {p1},{p2}")
-            p1.append(c1)
-            p1.append(c2)
-            return (1,p1)
+        pflat = "".join([chr(x+33) for x in p1]) + "".join([chr(x+33) for x in p2])
 
+        if pflat in deckHistory:
+            winner = 1
         else:
-            setups[p1str] = 1
-            setups[p2str] = 1
-            # infinite handling
+            deckHistory[pflat] = 1
 
-            if len(p1) >= c1 and len(p2) > c2:
+            if c1 > len(p1) or c2 > len(p2):
+                if c1 > c2:
+                    winner = 1
+                elif c2 > c1:
+                    winner = 2
+            else:
                 #print(f"{exS}recurses {p1},{p2}")
                 cp1 = copy.deepcopy(p1)
                 cp2 = copy.deepcopy(p2)
-                csetup = copy.deepcopy(setups)
-                (winner,_) = combat(cp1,cp2,csetup, depth=(depth+1))
+                (x,_,_) = combat(cp1[:c1],cp2[:c2], depth=(depth+1))
+                winner = x
 
-                if winner == 1:
-                    p1.append(c1)
-                    p1.append(c2)    
-                    #print(f"{exS}p1 recwins {p1},{p2}")
-                if winner == 2:
-                    p2.append(c2)
-                    p2.append(c1) 
-                    #print(f"{exS}p2 recwins {p1},{p2}")
-        
-            elif c1 > c2:
-                p1.append(c1)
-                p1.append(c2)    
-                #print(f"{exS}p1 wins {p1},{p2}")
-            elif c2 > c1:
-                p2.append(c2)
-                p2.append(c1)
-                #print(f"{exS}p2 wins {p1},{p2}")
+        if winner == 1:
+            p1.append(c1)
+            p1.append(c2)    
+            #print(f"{exS}p1 wins {p1},{p2}")
+        if winner == 2:
+            p2.append(c2)
+            p2.append(c1) 
+            #print(f"{exS}p2 wins {p1},{p2}")
 
-(winner,winnerdeck) = combat(ply1,ply2,{})
+    winnerdeck = []
+    looserdeck = []
+    if winner == 1: 
+        winnerdeck=p1
+        looserdeck=p2
+    if winner == 2:
+        winnerdeck=p2
+        looserdeck=p1
+    
+    #print(f"p{winner} wins round:{depth} {p1},{p2}")
+
+    return (winner,winnerdeck,looserdeck)
+
+(winner,winnerdeck,_) = combat(ply1,ply2)
 
 ret = 0
 for index,x in enumerate(winnerdeck):
     ret += x*(len(winnerdeck)-index)
 
 print(f"part2: {ret}")
+print(winnerdeck)
 
     
